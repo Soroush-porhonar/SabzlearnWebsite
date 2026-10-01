@@ -1,19 +1,36 @@
-import * as z from "zod";
+import { createRequire } from "node:module";
 
-const User = z
-  .object({
-    username: z.string().max(100).min(3),
-    email: z.email(),
-    password: z.string(),
-    confirmPassword: z.string(),
-    phone: z.number().max(11).min(11),
-    role: z.enum(["admin", "user"]).default("user"),
-  })
-  .strict()
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
 
-// the parsed result is validated and type safe!
-//const check = User.parse();
+const require = createRequire(import.meta.url);
+const Validator = require("fastest-validator");
+
+const validator = new Validator();
+
+const registerSchema = {
+  username: {
+    type: "string",
+    min: 3,
+    max:255,
+    empty: false,
+  },
+  email: {
+    type: "email",
+  },
+  phone:{
+    type:"number",
+    max:11
+  },
+  password: {
+    type: "string",
+    min: 8,
+    max:24
+  },
+  confirmPassword: {
+    type: "equal",
+    field:"password"
+  },
+  $$strict: true,
+};
+
+export const checkRegister = validator.compile(registerSchema);
+
