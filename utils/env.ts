@@ -10,7 +10,7 @@ const getEnv = (key: string): string => {
   return value;
 };
 
-const mongoUri = getEnv("MONGODB_URI");
-const port = getEnv("PORT");
-
-export { mongoUri, port };
+const MONGODB_URI = getEnv("MONGODB_URI");
+const PORT = getEnv("PORT");
+const JWT_SECRET = getEnv("JWT_SECRET");
+export { MONGODB_URI, PORT, JWT_SECRET };

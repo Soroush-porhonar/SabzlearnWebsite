@@ -1,4 +1,45 @@
-import { model } from "../../models/user.js";
-export function register() {}
+import { userModel } from "../../models/user.js";
+import type { RequestHandler } from "express";
+import { checkRegister as registerValidator } from "./../../validators/auth.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../../utils/env.js";
+
+export const register: RequestHandler = async (req, res) => {
+  const validationResult = registerValidator(req.body);
+
+  if (validationResult !== true) {
+    
+    return res.status(422).json({ errors: validationResult });
+  }
+
+  const { username, phone, email, password } = req.body;
+  const userExists = await userModel.findOne({
+    $or: [{ username }, { email }],
+  });
+
+  if (userExists) {
+    return res
+      .status(409)
+      .json({ message: "username or email already exists." });
+  }
+
+  const userCount = await userModel.countDocuments();
+  const hashpassword = await bcrypt.hash(password, 10);
+  const user = await userModel.create({
+    username,
+    email,
+    phone,
+    password: hashpassword,
+    role: userCount > 0 ? "user" : "admin",
+  });
+  const userObject = user.toObject()
+  Reflect.deleteProperty(userObject, hashpassword)
+  const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    expiresIn: "30 day",
+  });
+  
+  return res.status(201).json({ user: userObject, accessToken });
+};
 export function login() {}
 export function getMe() {}
