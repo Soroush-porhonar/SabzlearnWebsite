@@ -2,11 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import { MONGODB_URI, PORT } from "./utils/env.js";
 import { authRouter } from "./routes/v1/auth.js";
-
+import { userRouter } from "./routes/v1/user.js";
 import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import "dotenv/config";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/v1/auth", authRouter);
-
+app.use("/v1/user", userRouter);
 
 mongoose
   .connect(MONGODB_URI)
