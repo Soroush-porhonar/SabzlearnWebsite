@@ -4,6 +4,7 @@ import { checkRegister as registerValidator } from "./../../validators/auth.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../../utils/env.js";
+import { banedUserModel } from "../../models/banedPhone.js";
 
 export const register: RequestHandler = async (req, res) => {
   const validationResult = registerValidator(req.body);
@@ -23,7 +24,10 @@ export const register: RequestHandler = async (req, res) => {
       .status(409)
       .json({ message: "username or email already exists." });
   }
-
+  const isBanned = await banedUserModel.findOne({phone})
+  if (isBanned){
+    return res.status(409).json({message:"Phone number is banned"})
+  }
   const userCount = await userModel.countDocuments();
   const hashpassword = await bcrypt.hash(password, 10);
   const user = await userModel.create({
