@@ -17,8 +17,8 @@ const registerSchema = {
     type: "email",
   },
   phone:{
-    type:"number",
-    max:11
+    type:"string",
+    
   },
   password: {
     type: "string",
