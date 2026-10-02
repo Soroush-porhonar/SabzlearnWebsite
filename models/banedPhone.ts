@@ -8,4 +8,4 @@ const schema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-export const banedPhoneModel = mongoose.model("banedphone", schema);
+export const banedUserModel = mongoose.model("banedphone", schema);
