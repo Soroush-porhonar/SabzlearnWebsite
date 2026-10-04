@@ -69,6 +69,8 @@ export const login: RequestHandler = async (req, res) => {
   });
   return res.status(201).json(accessToken);
 };
+
 export const getMe: RequestHandler = async (req, res) => {
-  console.log(req.header("Authorization"));
+  console.log(req.header("Authorization")?.split(" ")[1]);
+  res.status(200).json({ Message: "OK" });
 };
