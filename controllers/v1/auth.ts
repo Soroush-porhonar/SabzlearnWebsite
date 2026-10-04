@@ -10,7 +10,6 @@ export const register: RequestHandler = async (req, res) => {
   const validationResult = registerValidator(req.body);
 
   if (validationResult !== true) {
-    
     return res.status(422).json({ errors: validationResult });
   }
 
@@ -24,9 +23,9 @@ export const register: RequestHandler = async (req, res) => {
       .status(409)
       .json({ message: "username or email already exists." });
   }
-  const isBanned = await banedUserModel.findOne({phone})
-  if (isBanned){
-    return res.status(409).json({message:"Phone number is banned"})
+  const isBanned = await banedUserModel.findOne({ phone });
+  if (isBanned) {
+    return res.status(409).json({ message: "Phone number is banned" });
   }
   const userCount = await userModel.countDocuments();
   const hashpassword = await bcrypt.hash(password, 10);
@@ -37,13 +36,39 @@ export const register: RequestHandler = async (req, res) => {
     password: hashpassword,
     role: userCount > 0 ? "user" : "admin",
   });
-  const userObject = user.toObject()
-  Reflect.deleteProperty(userObject, hashpassword)
+  const userObject = user.toObject();
+  Reflect.deleteProperty(userObject, hashpassword);
+
   const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
     expiresIn: "30 day",
   });
-  
+
   return res.status(201).json({ user: userObject, accessToken });
 };
-export function login() {}
-export function getMe() {}
+
+export const login: RequestHandler = async (req, res) => {
+  const { identifier, password } = req.body;
+
+  const user = await userModel.findOne({
+    $or: [{ email: identifier }, { username: identifier }],
+  });
+  if (!user) {
+    return res.status(401).json({ message: "Email or Username not found" });
+  }
+
+  if (typeof user.password !== "string") {
+    return;
+  }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: "Password incorrect" });
+  }
+
+  const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    expiresIn: "30 day",
+  });
+  return res.status(201).json(accessToken);
+};
+export const getMe: RequestHandler = async (req, res) => {
+  console.log(req.header("Authorization"));
+};
