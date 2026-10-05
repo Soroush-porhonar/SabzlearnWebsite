@@ -6,9 +6,7 @@ import { JWT_SECRET } from "../utils/env.js";
 export const isToken: RequestHandler = async (req, res, next) => {
   const authHeader = req.header("Authorization")?.split(" ");
   if (authHeader?.length !== 2) {
-    return res
-      .status(403)
-      .json({ message: "You dont have access to this API" });
+    return res.status(403).json({ message: "no auth Header " });
   }
 
   const token = authHeader[1];
