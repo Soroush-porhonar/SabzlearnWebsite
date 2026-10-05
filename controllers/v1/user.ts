@@ -28,3 +28,14 @@ export const removeUser: RequestHandler = async (req, res) => {
     res.status(200).json({ message: "user removed successfully" });
   }
 };
+export const changeRole: RequestHandler = async (req, res) => {
+  const id = req.params.id;
+  const user = await userModel.findById(id);
+  const newRole = user?.role === "user" ? "admin" : "user";
+  const result = await userModel.findByIdAndUpdate(id, { role: newRole });
+  if (result) {
+    res.status(200).json({ message: "user promoted to admin successfully" });
+  } else {
+    res.status(409).json({ message: "User not found" });
+  }
+};
