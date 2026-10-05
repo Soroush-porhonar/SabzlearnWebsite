@@ -19,3 +19,12 @@ export const getAll: RequestHandler = async (req, res) => {
   const allUsers = await userModel.find().select("-password").lean();
   res.json(allUsers);
 };
+export const removeUser: RequestHandler = async (req, res) => {
+  const id = req.params.id;
+  const removeResult = await userModel.findByIdAndDelete(id);
+  if (removeResult) {
+    res.status(404).json({ message: "id wasnt found" });
+  } else {
+    res.status(200).json({ message: "user removed successfully" });
+  }
+};
