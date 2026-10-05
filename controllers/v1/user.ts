@@ -1,6 +1,7 @@
 import { userModel } from "../../models/user.js";
 import { banedUserModel } from "../../models/banedPhone.js";
 import { RequestHandler } from "express";
+import bcrypt from "bcrypt";
 
 export const banUser: RequestHandler = async (req, res) => {
   const user = await userModel.findById(req.params.id);
@@ -37,5 +38,23 @@ export const changeRole: RequestHandler = async (req, res) => {
     res.status(200).json({ message: "user promoted to admin successfully" });
   } else {
     res.status(409).json({ message: "User not found" });
+  }
+};
+export const updateInfo: RequestHandler = async (req, res) => {
+  const user = res.locals.user;
+  const { username, phone, password, email } = req.body;
+  const hashPassword = bcrypt.hash(password, 10);
+  const updateResult = await userModel
+    .findByIdAndUpdate(user.id, {
+      username,
+      phone,
+      password: hashPassword,
+      email,
+    })
+    .select("-password");
+  if (updateResult) {
+    res
+      .status(200)
+      .json({ message: "User info updated Successfully", updateResult });
   }
 };
