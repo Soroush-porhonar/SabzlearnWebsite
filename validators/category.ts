@@ -6,18 +6,19 @@ const validator = new Validator();
 
 const registerSchema = {
   title: {
-    type: String,
+    type: "string",
     require: true,
     empty: false,
     min: 2,
     max: 15,
   },
   href: {
-    type: String,
+    type: "string",
     require: true,
     empty: false,
     min: 2,
     max: 15,
   },
+  $$strict: true,
 };
 export const checkCat = validator.compile(registerSchema);
