@@ -7,6 +7,7 @@ import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import "dotenv/config";
+import { categoryRouter } from "./routes/v1/category.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/v1/auth", authRouter);
 app.use("/v1/user", userRouter);
-
+app.use("/v1/category", categoryRouter);
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
