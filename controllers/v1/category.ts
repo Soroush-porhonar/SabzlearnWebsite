@@ -28,7 +28,7 @@ export const updateCat: RequestHandler = async (req, res) => {
   if (updatedCat) {
     res.status(200).json(updatedCat);
   } else {
-    res.status(500).json({ message: "something errorthingy happend" });
+    res.status(404).json({ message: "category not found" });
   }
 };
 
