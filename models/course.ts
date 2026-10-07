@@ -11,7 +11,7 @@ const schema = new mongoose.Schema(
     price: { type: Number, require: true },
     discount: { type: Number, default: 0 },
     categoryId: { type: String, require: true },
-    teacher: { type: mongoose.Types.ObjectId, require: true },
+    creator: { type: mongoose.Types.ObjectId, require: true },
     status: { type: String, require: true },
     sessions: { type: mongoose.Types.ObjectId, ref: "sessions", require: true },
   },
@@ -27,4 +27,4 @@ schema.virtual("comment", {
   localField: "_id",
   foreignField: "course",
 });
-const courseModel = mongoose.model("courses", schema);
+export const courseModel = mongoose.model("courses", schema);
