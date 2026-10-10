@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import multer from "multer";
-import { storage } from "../../utils/uploader.js";
+import { coverStorage } from "../../utils/uploader.js";
 import { courseModel } from "../../models/course.js";
 export const createCourse: RequestHandler = async (req, res) => {
   const {
@@ -24,7 +24,7 @@ export const createCourse: RequestHandler = async (req, res) => {
     price,
     discount,
     categoryId,
-    creator: user,
+    creatorId: user,
     status,
     cover: req.file?.filename,
   });
@@ -38,6 +38,6 @@ export const deleteCourse: RequestHandler = async (req, res) => {};
 export const getAllCourse: RequestHandler = async (req, res) => {};
 
 export const coverUpload: RequestHandler = multer({
-  storage: storage,
+  storage: coverStorage,
   limits: { fileSize: 10000000 },
 }).single("cover");
