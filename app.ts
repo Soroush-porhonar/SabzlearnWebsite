@@ -9,6 +9,7 @@ import { authRouter } from "./routes/v1/auth.js";
 import { userRouter } from "./routes/v1/user.js";
 import { categoryRouter } from "./routes/v1/category.js";
 import { courseRouter } from "./routes/v1/course.js";
+import { commentRouter } from "./routes/v1/comment.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/v1/auth", authRouter);
 app.use("/v1/user", userRouter);
 app.use("/v1/category", categoryRouter);
 app.use("/v1/course", courseRouter);
+app.use("/v1/comment", commentRouter);
 
 mongoose
   .connect(MONGODB_URI)

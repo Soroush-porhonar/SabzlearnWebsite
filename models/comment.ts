@@ -5,9 +5,9 @@ const schema = new mongoose.Schema(
     body: { type: String, require: true, empty: false },
     creator: { type: mongoose.Types.ObjectId, ref: "users", require: true },
     star: { type: Number, require: true },
-    isReply: { type: Boolean, require: true },
+    isReply: { type: Boolean, require: false },
     RepliedCom: { type: mongoose.Types.ObjectId, ref: "comments" },
-    Verified: { type: Boolean, require: true, default: 0 },
+    Verified: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
