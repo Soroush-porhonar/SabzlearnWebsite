@@ -4,7 +4,8 @@ import { RequestHandler } from "express";
 import bcrypt from "bcrypt";
 
 export const banUser: RequestHandler = async (req, res) => {
-  const user = await userModel.findById(req.params.id);
+  const userId = res.locals.ids.userId;
+  const user = await userModel.findById(userId);
   const banExist = await banedUserModel.findOne({ phone: user?.phone });
   if (banExist) {
     return res.status(204).json({ message: "User was banned" });
@@ -21,8 +22,8 @@ export const getAll: RequestHandler = async (req, res) => {
   res.json(allUsers);
 };
 export const removeUser: RequestHandler = async (req, res) => {
-  const id = req.params.id;
-  const removeResult = await userModel.findByIdAndDelete(id);
+  const userId = res.locals.ids.userId;
+  const removeResult = await userModel.findByIdAndDelete(userId);
   if (removeResult) {
     res.status(404).json({ message: "id wasnt found" });
   } else {
@@ -30,10 +31,10 @@ export const removeUser: RequestHandler = async (req, res) => {
   }
 };
 export const changeRole: RequestHandler = async (req, res) => {
-  const id = req.params.id;
-  const user = await userModel.findById(id);
+  const userId = res.locals.ids.userId;
+  const user = await userModel.findById(userId);
   const newRole = user?.role === "user" ? "admin" : "user";
-  const result = await userModel.findByIdAndUpdate(id, { role: newRole });
+  const result = await userModel.findByIdAndUpdate(userId, { role: newRole });
   if (result) {
     res.status(200).json({ message: "user promoted to admin successfully" });
   } else {

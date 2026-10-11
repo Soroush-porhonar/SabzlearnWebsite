@@ -16,6 +16,8 @@ import {
   videoUpload,
 } from "../../controllers/v1/session.js";
 import { isIdValid } from "../../middleware/idValidation.js";
+import { createEnrollment } from "../../controllers/v1/enrollment.js";
+
 export const courseRouter = Router();
 
 courseRouter.route("/").post(isToken, isAdmin, coverUpload, createCourse);
@@ -24,10 +26,14 @@ courseRouter.route("/").delete(deleteCourse);
 courseRouter.route("/").get(getAllCourse);
 //////////////////////////////////////////////////////////////////
 courseRouter
-  .route("/session/:id") //courseId
+  .route("/session/:courseId") //courseId
   .post(isToken, isAdmin, isIdValid, videoUpload, createSession);
 courseRouter.route("./session").get(isToken, isAdmin, getAllSession);
-courseRouter.route("./session/:id").get(isIdValid, getSessionInfo); //sessionId
+courseRouter.route("./session/:sessionId").get(isIdValid, getSessionInfo); //sessionId
 courseRouter
-  .route("./session/:Id") //sessionId
+  .route("./session/:sessionId") //sessionId
   .delete(isToken, isAdmin, isIdValid, removeSession);
+//////////////////////////////////////////////////////
+courseRouter
+  .route("./enroll/:courseId") //courseId
+  .delete(isToken, isIdValid, createEnrollment);

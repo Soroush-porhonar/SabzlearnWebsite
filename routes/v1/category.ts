@@ -11,6 +11,6 @@ export const categoryRouter = Express.Router();
 
 categoryRouter.route("/").post(createCat).get(getAllCat);
 categoryRouter
-  .route("/:id")
+  .route("/:catId")
   .put(isIdValid, updateCat)
   .delete(isIdValid, removeCat);

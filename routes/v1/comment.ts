@@ -5,4 +5,4 @@ import { isToken } from "../../middleware/auth.js";
 
 export const commentRouter = Router();
 
-commentRouter.route("/:id").post(isToken, isIdValid, createComment);
+commentRouter.route("/:courseId").post(isToken, isIdValid, createComment);

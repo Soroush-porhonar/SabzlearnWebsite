@@ -22,9 +22,12 @@ export const updateCat: RequestHandler = async (req, res) => {
   if (isCatValid !== true) {
     return res.status(409).json({ message: "invalid request content" });
   }
-  const id = req.params.id;
+  const catId = res.locals.ids.catId;
   const { title, href } = req.body;
-  const updatedCat = await categoryModel.findByIdAndUpdate(id, { title, href });
+  const updatedCat = await categoryModel.findByIdAndUpdate(catId, {
+    title,
+    href,
+  });
   if (updatedCat) {
     res.status(200).json(updatedCat);
   } else {
@@ -33,8 +36,8 @@ export const updateCat: RequestHandler = async (req, res) => {
 };
 
 export const removeCat: RequestHandler = async (req, res) => {
-  const id = req.params.id;
-  const updatedCat = await categoryModel.findByIdAndDelete(id);
+  const catId = res.locals.ids.catId;
+  const updatedCat = await categoryModel.findByIdAndDelete(catId);
   if (updatedCat) {
     res.status(200).json(updatedCat);
   } else {
