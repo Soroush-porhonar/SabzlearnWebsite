@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import { sessionModel } from "../../models/session.js";
 import multer from "multer";
 import { sessionStorage } from "../../utils/uploader.js";
+import { courseModel } from "../../models/course.js";
 
 export const createSession: RequestHandler = async (req, res) => {
   const courseId = res.locals.ids.courseId;
@@ -24,14 +25,15 @@ export const getAllSession: RequestHandler = async (req, res) => {
 };
 
 export const getSessionInfo: RequestHandler = async (req, res) => {
+  const courseHref = req.params.courseHref;
   const session = await sessionModel.findById(res.locals.ids.sessionId);
 
   if (!session) {
     return res.status(404).json({ message: "Session not found" });
   }
-
+  const course = await courseModel.findOne({ href: courseHref });
   const sessions = await sessionModel.find({
-    courseId: session.courseId,
+    courseId: course?._id,
   });
 
   return res.status(200).json({ session, sessions });

@@ -2,10 +2,11 @@ import { Router } from "express";
 import {
   coverUpload,
   createCourse,
-  deleteCourse,
   getAllCourse,
   getCatCourse,
   getCourseInfo,
+  relatedCourse,
+  removeCourse,
   updateCourse,
 } from "../../controllers/v1/course.js";
 import { isToken } from "../../middleware/auth.js";
@@ -24,20 +25,22 @@ export const courseRouter = Router();
 
 courseRouter.route("/").post(isToken, isAdmin, coverUpload, createCourse);
 courseRouter.route("/").put(updateCourse);
-courseRouter.route("/").delete(deleteCourse);
+courseRouter.route("/:courseId").delete(isIdValid, removeCourse);
 courseRouter.route("/").get(getAllCourse);
-courseRouter.route("/:href/category").get(getCatCourse);
-courseRouter.route("/:courseId").get(isIdValid, getCourseInfo);
+courseRouter.route("/category/:categoryHref").get(getCatCourse);
+courseRouter.route("/:courseHref").get(getCourseInfo);
+courseRouter.route("/related/:courseHref").get(relatedCourse);
 //////////////////////////////////////////////////////////////////
 courseRouter
-  .route("/session/:courseId") //courseId
+  .route("/:courseId/session") //courseId
   .post(isToken, isAdmin, isIdValid, videoUpload, createSession);
-courseRouter.route("./session").get(isToken, isAdmin, getAllSession);
-courseRouter.route("./session/:sessionId").get(isIdValid, getSessionInfo); //sessionId
+courseRouter.route("/session").get(isToken, isAdmin, getAllSession);
+courseRouter.route("/:courseHref/:sessionId").get(isIdValid, getSessionInfo); //sessionId
 courseRouter
-  .route("./session/:sessionId") //sessionId
+  .route("/session/:sessionId") //sessionId
   .delete(isToken, isAdmin, isIdValid, removeSession);
+
 //////////////////////////////////////////////////////
 courseRouter
-  .route("./enroll/:courseId") //courseId
-  .delete(isToken, isIdValid, createEnrollment);
+  .route("/:courseId/enroll") //courseId
+  .post(isToken, isIdValid, createEnrollment);
