@@ -10,14 +10,13 @@ const schema = new mongoose.Schema(
     stars: { type: Number },
     price: { type: Number, require: true },
     discount: { type: Number, default: 0 },
-    categoryId: { type: mongoose.Types.ObjectId, require: true },
-    creatorId: { type: mongoose.Types.ObjectId, require: true },
-    status: { type: String, require: true },
-    sessionsId: {
+    categoryId: {
       type: mongoose.Types.ObjectId,
-      ref: "sessions",
+      ref: "categories",
       require: true,
     },
+    creatorId: { type: mongoose.Types.ObjectId, ref: "usersd", require: true },
+    status: { type: String, require: true },
   },
   { timestamps: true },
 );

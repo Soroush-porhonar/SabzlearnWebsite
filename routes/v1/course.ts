@@ -4,6 +4,8 @@ import {
   createCourse,
   deleteCourse,
   getAllCourse,
+  getCatCourse,
+  getCourseInfo,
   updateCourse,
 } from "../../controllers/v1/course.js";
 import { isToken } from "../../middleware/auth.js";
@@ -24,6 +26,8 @@ courseRouter.route("/").post(isToken, isAdmin, coverUpload, createCourse);
 courseRouter.route("/").put(updateCourse);
 courseRouter.route("/").delete(deleteCourse);
 courseRouter.route("/").get(getAllCourse);
+courseRouter.route("/:href/category").get(getCatCourse);
+courseRouter.route("/:courseId").get(isIdValid, getCourseInfo);
 //////////////////////////////////////////////////////////////////
 courseRouter
   .route("/session/:courseId") //courseId

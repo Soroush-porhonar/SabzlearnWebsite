@@ -3,6 +3,9 @@ import multer from "multer";
 import { coverStorage } from "../../utils/uploader.js";
 import { courseModel } from "../../models/course.js";
 import { categoryModel } from "../../models/category.js";
+import { sessionModel } from "../../models/session.js";
+import { CommentsModel } from "../../models/comment.js";
+import { enrollmentModel } from "../../models/enrollments.js";
 export const createCourse: RequestHandler = async (req, res) => {
   const {
     title,
@@ -49,6 +52,17 @@ export const getCatCourse: RequestHandler = async (req, res) => {
   } else {
     res.status(200).json([]);
   }
+};
+export const getCourseInfo: RequestHandler = async (req, res) => {
+  const courseId = res.locals.ids.courseId;
+  const course = await courseModel
+    .findById(courseId)
+    .populate("creatorId", "-password")
+    .populate("categoryId");
+  const sessions = await sessionModel.find(courseId);
+  const comments = await CommentsModel.find({ courseId, isVerified: true });
+  const students = await enrollmentModel.find(courseId).countDocuments;
+  return res.status(200).json({ course, sessions, comments, students });
 };
 
 export const coverUpload: RequestHandler = multer({
