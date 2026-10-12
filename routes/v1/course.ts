@@ -5,8 +5,10 @@ import {
   getAllCourse,
   getCatCourse,
   getCourseInfo,
+  preOrderCourse,
   relatedCourse,
   removeCourse,
+  topRatedCourse,
   updateCourse,
 } from "../../controllers/v1/course.js";
 import { isToken } from "../../middleware/auth.js";
@@ -29,7 +31,9 @@ courseRouter.route("/:courseId").delete(isIdValid, removeCourse);
 courseRouter.route("/").get(getAllCourse);
 courseRouter.route("/category/:categoryHref").get(getCatCourse);
 courseRouter.route("/:courseHref").get(getCourseInfo);
-courseRouter.route("/related/:courseHref").get(relatedCourse);
+courseRouter.route("/:courseHref/related").get(relatedCourse);
+courseRouter.route("/preOrder").get(preOrderCourse);
+courseRouter.route("/topRated").get(topRatedCourse);
 //////////////////////////////////////////////////////////////////
 courseRouter
   .route("/:courseId/session") //courseId

@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   acceptComment,
   createComment,
+  getAllComment,
   rejectComment,
   removeComment,
   replyComment,
@@ -25,3 +26,4 @@ commentRouter
 commentRouter
   .route("/:commentId/reply")
   .post(isToken, isAdmin, isIdValid, replyComment);
+commentRouter.route("/").get(isToken, isAdmin, getAllComment);

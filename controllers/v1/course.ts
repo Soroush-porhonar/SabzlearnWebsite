@@ -64,7 +64,18 @@ export const getCourseInfo: RequestHandler = async (req, res) => {
     .populate("categoryId");
   const courseId = course?._id;
   const sessions = await sessionModel.find(courseId);
-  const comments = await CommentsModel.find({ courseId, isVerified: true });
+  const comments = await CommentsModel.find({
+    courseId,
+    Verified: true,
+    isReply: false,
+  }).populate({
+    path: "replies",
+    match: { Verified: true },
+    populate: {
+      path: "creatorId",
+      select: "username",
+    },
+  });
   const students = await enrollmentModel.countDocuments({ courseId });
   const isStudent = !!(await enrollmentModel.exists({ courseId, userId }));
   return res
@@ -92,6 +103,15 @@ export const relatedCourse: RequestHandler = async (req, res) => {
     (catCourse) => !catCourse._id.equals(course?._id),
   );
   res.status(200).json(filteredCatCourses);
+};
+
+export const topRatedCourse: RequestHandler = async (req, res) => {
+  const courses = await courseModel.find().sort("stars");
+  res.status(200).json(courses);
+};
+export const preOrderCourse: RequestHandler = async (req, res) => {
+  const courses = await courseModel.find({ status: "preOrder" });
+  res.status(201).json(courses);
 };
 export const coverUpload: RequestHandler = multer({
   storage: coverStorage,

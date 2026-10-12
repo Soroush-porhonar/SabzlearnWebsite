@@ -71,3 +71,17 @@ export const replyComment: RequestHandler = async (req, res) => {
     res.status(400).json({ message: "reply couldnt be created" });
   }
 };
+export const getAllComment: RequestHandler = async (req, res) => {
+  const comments = await CommentsModel.find({
+    Verified: true,
+    isReply: false,
+  }).populate({
+    path: "replies",
+    match: { Verified: true },
+    populate: {
+      path: "creatorId",
+      select: "username",
+    },
+  });
+  res.status(200).json(comments);
+};
